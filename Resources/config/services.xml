@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+
+        <!-- Collections -->
+        <service id="Ict\ApiOneEndpoint\Operation\OperationCollection" class="Ict\ApiOneEndpoint\Operation\OperationCollection">
+            <argument type="tagged_iterator" tag="ict.api_one_endpoint.operation"/>
+        </service>
+
+        <service id="Ict\ApiOneEndpoint\Notification\NotificationCollection" class="Ict\ApiOneEndpoint\Notification\NotificationCollection">
+            <argument type="tagged_iterator" tag="ict.api_one_endpoint.notification_handler"/>
+        </service>
+        <!-- End collections -->
+
+        <!-- Operations -->
+        <service id="Ict\ApiOneEndpoint\Operation\OperationHandler" class="Ict\ApiOneEndpoint\Operation\OperationHandler">
+            <argument type="service" id="Ict\ApiOneEndpoint\Operation\OperationCollection" />
+            <argument type="service" id="Symfony\Component\Messenger\MessageBusInterface" />
+            <argument type="service" id="Ict\ApiOneEndpoint\Attribute\AttributeHelper" />
+            <argument type="service" id="Symfony\Bundle\SecurityBundle\Security" />
+        </service>
+        <!-- End operations -->
+
+        <!-- Notifications -->
+        <service id="Ict\ApiOneEndpoint\Notification\MercureNotificationHandler" class="Ict\ApiOneEndpoint\Notification\MercureNotificationHandler">
+            <argument type="service" id="Symfony\Component\Mercure\HubInterface"></argument>
+        </service>
+        <!-- End notifications-->
+
+        <service id="Ict\ApiOneEndpoint\Attribute\AttributeHelper" class="Ict\ApiOneEndpoint\Attribute\AttributeHelper">
+
+        </service>
+
+
+
+    </services>
+</container>

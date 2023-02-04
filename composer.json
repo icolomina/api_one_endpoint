@@ -1,0 +1,40 @@
+{
+    "name": "ict/api_one_endpoint",
+    "description": "Create a one endpoint",
+    "type": "symfony-bundle",
+    "autoload": {
+        "psr-4": {
+            "Ict\\ApiOneEndpoint\\": ""
+        }
+    },
+    "authors": [
+        {
+            "name": "Nacho Colomina",
+            "email": "ignacio.colomina@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=8.1",
+        "symfony/console": "6.2.*",
+        "symfony/dotenv": "6.2.*",
+        "symfony/flex": "^2",
+        "symfony/framework-bundle": "6.2.*",
+        "symfony/mercure-bundle": "^0.3.5",
+        "symfony/messenger": "6.2.*",
+        "symfony/property-access": "6.2.*",
+        "symfony/property-info": "6.2.*",
+        "symfony/runtime": "6.2.*",
+        "symfony/security-bundle": "6.2.*",
+        "symfony/serializer": "6.2.*",
+        "symfony/uid": "6.2.*",
+        "symfony/validator": "6.2.*",
+        "symfony/yaml": "6.2.*"
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        }
+    }
+}
