@@ -2,8 +2,8 @@
 
 namespace Ict\ApiOneEndpoint\Contract\Operation;
 
-use Model\Api\ApiInput;
-use Model\Api\ApiOutput;
+use Ict\ApiOneEndpoint\Model\Api\ApiInput;
+use Ict\ApiOneEndpoint\Model\Api\ApiOutput;
 
 interface OperationInterface
 {
