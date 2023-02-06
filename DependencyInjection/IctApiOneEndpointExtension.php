@@ -2,8 +2,7 @@
 
 namespace Ict\ApiOneEndpoint\DependencyInjection;
 
-use Contract\Api\OperationInterface;
-use Symfony\Component\Config\Definition\Configuration;
+use Ict\ApiOneEndpoint\Contract\Operation\OperationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;

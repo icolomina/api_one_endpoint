@@ -2,13 +2,11 @@
 
 namespace Ict\ApiOneEndpoint\Message;
 
-use Contract\Api\OperationNotificationInterface;
-use Ict\ApiOneEndpoint\Contract\Operation\OperationBackgroundInterface;
+use Ict\ApiOneEndpoint\Contract\Operation\OperationNotificationInterface;
 use Ict\ApiOneEndpoint\Operation\OperationCollection;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Uid\Uuid;
 
 #[AsMessageHandler]
 class OperationMessageHandler

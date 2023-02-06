@@ -1,8 +1,6 @@
 <?php
 
-namespace Contract\Api;
-
-use Symfony\Component\Security\Core\User\UserInterface;
+namespace Ict\ApiOneEndpoint\Contract\Operation;
 
 interface OperationNotificationInterface
 {

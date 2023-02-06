@@ -2,7 +2,7 @@
 
 namespace Ict\ApiOneEndpoint\Operation;
 
-use Contract\Api\OperationInterface;
+use Ict\ApiOneEndpoint\Contract\Operation\OperationInterface;
 
 class OperationCollection
 {

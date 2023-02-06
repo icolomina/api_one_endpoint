@@ -2,14 +2,13 @@
 
 namespace Ict\ApiOneEndpoint\Operation;
 
-use App\Exception\ApiOperationException;
 use Ict\ApiOneEndpoint\Attribute\AttributeHelper;
 use Ict\ApiOneEndpoint\Exception\OperationNotDefinedException;
 use Ict\ApiOneEndpoint\Message\OperationMessage;
+use Ict\ApiOneEndpoint\Model\Api\ApiInput;
+use Ict\ApiOneEndpoint\Model\Api\ApiOutput;
 use Ict\ApiOneEndpoint\Model\Attribute\IsBackground;
 use Ict\ApiOneEndpoint\Model\Operation\OperationSubject;
-use Model\Api\ApiInput;
-use Model\Api\ApiOutput;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;

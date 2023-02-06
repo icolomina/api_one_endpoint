@@ -1,10 +1,9 @@
 <?php
 
-namespace Contract\Api;
+namespace Ict\ApiOneEndpoint\Contract\Operation;
 
 use Model\Api\ApiInput;
 use Model\Api\ApiOutput;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 interface OperationInterface
 {

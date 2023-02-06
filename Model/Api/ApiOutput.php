@@ -1,6 +1,6 @@
 <?php
 
-namespace Model\Api;
+namespace Ict\ApiOneEndpoint\Model\Api;
 
 class ApiOutput
 {
