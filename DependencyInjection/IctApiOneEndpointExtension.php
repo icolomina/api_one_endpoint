@@ -31,8 +31,6 @@ class IctApiOneEndpointExtension extends Extension
                 throw new InvalidArgumentException('Symfony mercure must be installed in order to use mercure notifications. ' .
                 'Try "composer require mercure" to install it');
             }
-
-
         }
     }
 }
