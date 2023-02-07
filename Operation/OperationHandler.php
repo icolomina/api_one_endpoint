@@ -46,6 +46,8 @@ class OperationHandler
                 Response::HTTP_ACCEPTED
             );
         }
+
+        return $operationHandler->perform($apiInput);
     }
 
 
