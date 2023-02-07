@@ -27,7 +27,7 @@
 
         <!-- Notifications -->
         <service id="Ict\ApiOneEndpoint\Notification\MercureNotificationHandler" class="Ict\ApiOneEndpoint\Notification\MercureNotificationHandler">
-            <argument type="service" id="Symfony\Component\Mercure\HubInterface"></argument>
+            <argument type="service" id="Symfony\Component\Mercure\HubInterface" />
         </service>
         <!-- End notifications-->
 
