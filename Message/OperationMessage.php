@@ -2,7 +2,7 @@
 
 namespace Ict\ApiOneEndpoint\Message;
 
-use Model\Api\ApiInput;
+use Ict\ApiOneEndpoint\Model\Api\ApiInput;
 
 class OperationMessage
 {
