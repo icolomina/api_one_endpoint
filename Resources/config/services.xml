@@ -21,7 +21,7 @@
             <argument type="service" id="Ict\ApiOneEndpoint\Operation\OperationCollection" />
             <argument type="service" id="Symfony\Component\Messenger\MessageBusInterface" />
             <argument type="service" id="Ict\ApiOneEndpoint\Attribute\AttributeHelper" />
-            <argument type="service" id="Symfony\Bundle\SecurityBundle\Security" />
+            <argument type="service" id="security.helper" />
         </service>
         <!-- End operations -->
 
