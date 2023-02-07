@@ -9,7 +9,6 @@ use Ict\ApiOneEndpoint\Model\Api\ApiInput;
 use Ict\ApiOneEndpoint\Model\Api\ApiOutput;
 use Ict\ApiOneEndpoint\Model\Attribute\IsBackground;
 use Ict\ApiOneEndpoint\Model\Operation\OperationSubject;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
@@ -21,7 +20,7 @@ class OperationHandler
         private readonly OperationCollection $operationCollection,
         private readonly MessageBusInterface $bus,
         private readonly AttributeHelper $attributeHelper,
-        private readonly Security $security
+        private readonly mixed $security
     ){ }
 
     public function performOperation(ApiInput $apiInput): ApiOutput
