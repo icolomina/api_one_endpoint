@@ -20,6 +20,7 @@ class OperationHandler
         private readonly OperationCollection $operationCollection,
         private readonly MessageBusInterface $bus,
         private readonly AttributeHelper $attributeHelper,
+        private readonly OperationInputValidator $operationInputValidator,
         private readonly mixed $security
     ){ }
 
@@ -30,6 +31,10 @@ class OperationHandler
         }
 
         $operationHandler = $this->operationCollection->getOperation($apiInput->getOperation());
+        if(!empty($operationHandler->getInput())){
+            $this->operationInputValidator->validateInput($apiInput, $operationHandler->getInput());
+        }
+
         $isGranted = $this->security->isGranted('EXECUTE_OPERATION', new OperationSubject(get_class($operationHandler), $operationHandler->getGroup()));
         if(!$isGranted) {
             throw new AccessDeniedException('Not allowed to perform this operation');
