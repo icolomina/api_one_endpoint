@@ -36,5 +36,8 @@
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "10.1.x-dev"
     }
 }
