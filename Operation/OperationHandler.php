@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class OperationHandler
 {
     public function __construct(
-        private readonly OperationCollection $operationCollection,
+        private readonly OperationHandlerDiscover $operationHandlerDiscover,
         private readonly MessageBusInterface $bus,
         private readonly AttributeHelper $attributeHelper,
         private readonly OperationInputValidator $operationInputValidator,
@@ -26,11 +26,7 @@ class OperationHandler
 
     public function performOperation(ApiInput $apiInput): ApiOutput
     {
-        if(!$this->operationCollection->hasOperation($apiInput->getOperation())){
-            throw new OperationNotDefinedException($apiInput->getOperation());
-        }
-
-        $operationHandler = $this->operationCollection->getOperation($apiInput->getOperation());
+        $operationHandler = $this->operationHandlerDiscover->discover($apiInput);
         if(!empty($operationHandler->getInput())){
             $this->operationInputValidator->validateInput($apiInput, $operationHandler->getInput());
         }
