@@ -84,4 +84,34 @@ Let's see the following examples:
 
 First example returns an array of Hero objects as an output and second example returns PaymentDoneOutput object.
 
+### Defining input operations
 
+Operation inputs must be defined creating simple objects with its getters and setters. You can use [symfony validation constraints](https://symfony.com/doc/current/reference/constraints.html) to define validation rules so your input must hold required and valid data. This bundle 
+will validate input automatically and will throw an Ict\ApiOneEndpoint\Exception\OperationValidationException if validation fails.
+
+As an example, let's see how a payment operation input would looks like:
+
+```php
+use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\NotBlank;
+
+class SendPaymentOperationInput
+{
+    #[NotBlank(message: 'From cannot be empty')]
+    private string $from;
+
+    #[NotBlank(message: 'To cannot be empty')]
+    private string $to;
+
+    #[NotBlank(message: 'Amount cannot be empty')]
+    #[GreaterThan(0, message: 'Amount must be greater then 0')]
+    private string $amount;
+    
+    // getters & setters
+
+}
+```
+
+### Defining operations
+
+Operations must implement Ict\ApiOneEndpoint\Contract\Operation\OperationInterface
