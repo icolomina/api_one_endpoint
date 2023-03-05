@@ -40,7 +40,7 @@ class OperationHandlerDiscoverTest extends TestCase
     {
         $operationOne = new class implements OperationInterface {
 
-            public function perform(ApiInput $apiInput): ApiOutput { return new ApiOutput([], 200);}
+            public function perform(mixed $operationData): ApiOutput { return new ApiOutput([], 200);}
             public function getName(): string { return 'op1'; }
             public function getInput(): ?string{ return null; }
             public function getGroup(): ?string{ return null; }
@@ -48,7 +48,7 @@ class OperationHandlerDiscoverTest extends TestCase
 
         $operationTwo = new class implements OperationInterface {
 
-            public function perform(ApiInput $apiInput): ApiOutput { return new ApiOutput([], 200);}
+            public function perform(mixed $operationData): ApiOutput { return new ApiOutput([], 200);}
             public function getName(): string { return 'op2'; }
             public function getInput(): ?string{ return null; }
             public function getGroup(): ?string{ return null; }

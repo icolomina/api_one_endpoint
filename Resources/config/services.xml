@@ -36,7 +36,10 @@
         <!-- End notifications-->
 
         <service id="Ict\ApiOneEndpoint\Attribute\AttributeHelper" class="Ict\ApiOneEndpoint\Attribute\AttributeHelper">
+        </service>
 
+        <service id="Ict\ApiOneEndpoint\EventSubscriber\OperationValidationSubscriber" class="Ict\ApiOneEndpoint\EventSubscriber\OperationValidationSubscriber">
+            <tag name="kernel.event_subscriber"/>
         </service>
 
 
