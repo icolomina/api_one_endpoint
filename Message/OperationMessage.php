@@ -7,7 +7,8 @@ use Ict\ApiOneEndpoint\Model\Api\ApiInput;
 class OperationMessage
 {
     public function __construct(
-        public readonly ApiInput $apiInput,
+        public readonly mixed $operationData,
+        public readonly string $operation,
         public readonly ?string $userIdentifier = null
     ){ }
 }

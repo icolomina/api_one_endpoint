@@ -19,16 +19,15 @@ class OperationMessageHandler
 
     public function __invoke(OperationMessage $message): void
     {
-        $apiInput  = $message->apiInput;
-        $operation = $this->operationCollection->getOperation($apiInput->getOperation());
-        $operation->perform($apiInput);
+        $operationHandler = $this->operationCollection->getOperation($message->operation);
+        $operationHandler->perform($message->operationData);
 
-        if($operation instanceof OperationNotificationInterface){
-            $topic = $operation->getTopic($message->userIdentifier);
+        if($operationHandler instanceof OperationNotificationInterface){
+            $topic = $operationHandler->getTopic($message->userIdentifier);
             $this->hub->publish(
                 new Update(
                     $topic,
-                    $operation->getNotificationData()
+                    $operationHandler->getNotificationData()
                 )
             );
         }

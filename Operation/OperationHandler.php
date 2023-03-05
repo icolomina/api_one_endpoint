@@ -27,8 +27,10 @@ class OperationHandler
     public function performOperation(ApiInput $apiInput): ApiOutput
     {
         $operationHandler = $this->operationHandlerDiscover->discover($apiInput);
+        $operationData = null;
+
         if(!empty($operationHandler->getInput())){
-            $this->operationInputValidator->validateInput($apiInput, $operationHandler->getInput());
+            $operationData = $this->operationInputValidator->validateInput($apiInput, $operationHandler->getInput());
         }
 
         $isGranted = $this->security->isGranted('EXECUTE_OPERATION', new OperationSubject(get_class($operationHandler), $operationHandler->getGroup()));
@@ -41,14 +43,14 @@ class OperationHandler
             $stamps = ($attrObject->delay > 0) ? [new DelayStamp($attrObject->delay * 1000)] : [];
             $userIdentifier  = $this->security->getToken()?->getUser()?->getUserIdentifier();
 
-            $this->bus->dispatch(new OperationMessage($apiInput, $userIdentifier), $stamps);
+            $this->bus->dispatch(new OperationMessage($operationData, $operationHandler->getName(), $userIdentifier), $stamps);
             return new ApiOutput(
                 ['status' => 'Queued'],
                 Response::HTTP_ACCEPTED
             );
         }
 
-        return $operationHandler->perform($apiInput);
+        return $operationHandler->perform($operationData);
     }
 
 
