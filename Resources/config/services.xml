@@ -20,11 +20,17 @@
             <argument type="service" id="Ict\ApiOneEndpoint\Operation\OperationCollection" />
         </service>
 
+        <service id="Ict\ApiOneEndpoint\Operation\OperationInputValidator" class="Ict\ApiOneEndpoint\Operation\OperationInputValidator">
+            <argument type="service" id="validator" />
+            <argument type="service" id="serializer" />
+        </service>
+
         <!-- Operations -->
         <service id="Ict\ApiOneEndpoint\Operation\OperationHandler" class="Ict\ApiOneEndpoint\Operation\OperationHandler">
             <argument type="service" id="Ict\ApiOneEndpoint\Operation\OperationHandlerDiscover" />
             <argument type="service" id="Symfony\Component\Messenger\MessageBusInterface" />
             <argument type="service" id="Ict\ApiOneEndpoint\Attribute\AttributeHelper" />
+            <argument type="service" id="Ict\ApiOneEndpoint\Operation\OperationInputValidator" />
             <argument type="service" id="security.helper" />
         </service>
         <!-- End operations -->
