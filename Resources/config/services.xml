@@ -22,7 +22,7 @@
 
         <!-- Operations -->
         <service id="Ict\ApiOneEndpoint\Operation\OperationHandler" class="Ict\ApiOneEndpoint\Operation\OperationHandler">
-            <argument type="service" id="Ict\ApiOneEndpoint\Operation\OperationCollection" />
+            <argument type="service" id="Ict\ApiOneEndpoint\Operation\OperationHandlerDiscover" />
             <argument type="service" id="Symfony\Component\Messenger\MessageBusInterface" />
             <argument type="service" id="Ict\ApiOneEndpoint\Attribute\AttributeHelper" />
             <argument type="service" id="security.helper" />
