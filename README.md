@@ -115,3 +115,77 @@ class SendPaymentOperationInput
 ### Defining operations
 
 Operations must implement Ict\ApiOneEndpoint\Contract\Operation\OperationInterface
+
+```php
+use Ict\ApiOneEndpoint\Contract\Operation\OperationInterface;
+use Ict\ApiOneEndpoint\Model\Api\ApiOutput;
+
+class SendPaymentOperation implements OperationInterface
+{
+
+    public function perform(mixed $operationData): ApiOutput
+    {
+        // Perform operation ....
+        // Sending bizum, BTC ......
+        return new ApiOutput([], 200);
+    }
+
+    public function getName(): string
+    {
+        return 'SendPayment';
+    }
+
+    public function getInput(): ?string
+    {
+        return SendPaymentOperationInput::class;
+    }
+
+    public function getGroup(): ?string
+    {
+        return null;
+    }
+}
+```
+
+Each operation must define the following methods (declared in OperationInterface):
+
+- **perform**: Executes operation
+- **getName**: Gets operation name
+- **getInput**: Gets input class. When an operation is executed, payload data will be deserialized to the input class and also validated. 
+- **getGroup**: Gets operation group. We will cover it when seeing operation authorization.
+
+### Protecting operations
+
+This bundle relies on [symfony voters](https://symfony.com/doc/current/security/voters.html) to protect operations. Take a look to the following voter:
+
+```php
+use Ict\ApiOneEndpoint\Model\Operation\OperationSubject;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+
+class SendPaymentVoter extends Voter
+{
+
+    protected function supports(string $attribute, mixed $subject): bool
+    {
+        if(!$subject instanceof OperationSubject){
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+    {
+        $user = $token->getUser();
+        if(!in_array('ROLE_PAYMENT', $user->getRoles())){
+            return false;
+        }
+
+        return true;
+    }
+}
+```
+
+> If you want to protect you api from an autentication context (JWT token, user / pass) you can use [symfony security](https://symfony.com/doc/current/security/custom_authenticator.html)
+
