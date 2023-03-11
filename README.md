@@ -189,3 +189,144 @@ class SendPaymentVoter extends Voter
 
 > If you want to protect you api from an autentication context (JWT token, user / pass) you can use [symfony security](https://symfony.com/doc/current/security/custom_authenticator.html)
 
+The bundle pass an Ict\ApiOneEndpoint\Model\Operation\OperationSubject as an attribute to the voter. This gives you access to operation name and 
+operation group (if it's been defined in getGroup method). Groups could be useful when you want to grant access to a group of operations to certain role or roles.
+As an example, let's imagine you have the following operations:
+
+- CreateAccount
+- UpdateAccount
+- RemoveAccount
+
+If you would want to restrict access to admin role, you would have to return the same group in getGroup method and then check the group in your voter.
+
+```php
+use Ict\ApiOneEndpoint\Model\Operation\OperationSubject;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+
+class AccountManagementVoter extends Voter
+{
+
+    protected function supports(string $attribute, mixed $subject): bool
+    {
+        if(!$subject instanceof OperationSubject){
+            return false;
+        }
+
+        return $subject->getGroup() === 'ACCOUNT';
+    }
+
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+    {
+        $user = $token->getUser();
+        if(!in_array('ROLE_ADMIN', $user->getRoles())){
+            return false;
+        }
+
+        return true;
+    }
+}
+```
+> This bundle always check operation authorization by it's possible there are no voters defined or no voters supporting conditions. To avoid getting denied access when no voters executed, set the following access decision strategy in your security.yaml file:
+
+```yaml
+security:
+   ......
+   access_decision_manager:
+      strategy: unanimous
+      allow_if_all_abstain: true
+```
+
+You can find more information about access decision strategy in [symfony docs](https://symfony.com/doc/current/security/voters.html#changing-the-access-decision-strategy)
+
+### Sending operations to the background
+
+In order to allow developers to configure some operations to be executed in the background, this bundle relies on:
+
+- [Symfony messenger](https://symfony.com/doc/current/messenger.html)
+- **Ict\ApiOneEndpoint\Model\Attribute\IsBackground** attribute
+
+Let's go back to SendPayment operation
+
+```php
+use Ict\ApiOneEndpoint\Contract\Operation\OperationInterface;
+use Ict\ApiOneEndpoint\Model\Api\ApiOutput;
+use Ict\ApiOneEndpoint\Model\Attribute\IsBackground;
+
+#[IsBackground]
+class SendPaymentOperation implements OperationInterface
+{
+   .......
+}
+```
+When an operation is annotated with **IsBackground** attribute, it's execution will be performed in the background and the client will no have to wait until it finishes. It can be useful for operations which can take more time to finish. Sending an email or a payment would be examples of this kind of operations.
+
+After an operation is sent to the background, a 202 (Accepted) http request is returned to the client with the following content:
+
+```json
+  {
+     "status" : "QUEUED"
+  }
+```
+If you want to delay the execution some time, you can add the delay property to the attribute:
+
+```php
+use Ict\ApiOneEndpoint\Contract\Operation\OperationInterface;
+use Ict\ApiOneEndpoint\Model\Api\ApiOutput;
+use Ict\ApiOneEndpoint\Model\Attribute\IsBackground;
+
+#[IsBackground(delay: 300)]
+class SendPaymentOperation implements OperationInterface
+{
+   .......
+}
+```
+
+It will delay the execution 300 seconds (5 minutes).
+
+### Sending notifications to the user
+
+When an operation execution has been sent to the background, it can be useful to send an notification to the client to notify about the status of the operation. This bundle uses [symfony mercure bundle](https://symfony.com/doc/current/mercure.html) to send a notification to the client when an operation execution finishes.
+
+Again, let's go back to SendPayment operation
+
+```php
+use Ict\ApiOneEndpoint\Contract\Operation\OperationInterface;
+use Ict\ApiOneEndpoint\Contract\Operation\OperationNotificationInterface;
+use Ict\ApiOneEndpoint\Model\Api\ApiOutput;
+use Ict\ApiOneEndpoint\Model\Attribute\IsBackground;
+
+#[IsBackground]
+class SendPaymentOperation implements OperationInterface, OperationNotificationInterface
+{
+
+    private array $notificationData = [];
+    
+    public function perform(mixed $operationData): ApiOutput
+    {
+        // Perform operation ....
+        // Sending bizum, BTC ......
+        
+        $this->notificationData = []; // Push here all data we want to push back to the client
+        return new ApiOutput([], 200);
+    }
+
+    public function getNotificationData(): string
+    {
+        return json_encode($this->notificationData);
+    }
+
+    public function getTopic(?string $userIdentifier = null): string
+    {
+        return 'https://mydomain.com/' . $userIdentifier . '/payments';
+    }
+```
+
+As we can see above, we have to implement _Ict\ApiOneEndpoint\Contract\Operation\OperationNotificationInterface_ in our operation to be able to send notification data to the client. This interface defines two methods:
+
+- **getNotificationData()**: Returns raw data which will be sent as notification payload (You have to use a format you can easily read on the client. Json format use to be the preferred one ).
+- **getTopic()**: Topic client will have to subscribe to in order to read notifications (See [mercure docs](https://mercure.rocks/spec#topic-selectors) to learn more about topics).
+
+With this, a notification would be sent to the client after a payment sending operation finishes.
+
+> If you want to use another way to sending notifications, you can create your own services and use it into your operations.
