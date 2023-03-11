@@ -114,4 +114,6 @@ class SendPaymentOperationInput
 
 ### Defining operations
 
-Operations must implement Ict\ApiOneEndpoint\Contract\Operation\OperationInterface
+Operations must implement Ict\ApiOneEndpoint\Contract\Operation\OperationInterface.
+
+
