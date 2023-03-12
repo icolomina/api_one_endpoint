@@ -18,10 +18,10 @@ class OperationHandler
 {
     public function __construct(
         private readonly OperationHandlerDiscover $operationHandlerDiscover,
-        private readonly MessageBusInterface $bus,
+        private readonly OperationBackgroundHandler $operationBackgroundHandler,
         private readonly AttributeHelper $attributeHelper,
         private readonly OperationInputValidator $operationInputValidator,
-        private readonly mixed $security
+        private readonly mixed $security,
     ){ }
 
     public function performOperation(ApiInput $apiInput): ApiOutput
@@ -38,12 +38,13 @@ class OperationHandler
             throw new AccessDeniedException('Not allowed to perform this operation');
         }
 
+        /**
+         * @var IsBackground|null $attrObject
+         */
         $attrObject = $this->attributeHelper->getAttr($operationHandler, IsBackground::class);
         if($attrObject){
-            $stamps = ($attrObject->delay > 0) ? [new DelayStamp($attrObject->delay * 1000)] : [];
             $userIdentifier  = $this->security->getToken()?->getUser()?->getUserIdentifier();
-
-            $this->bus->dispatch(new OperationMessage($operationData, $operationHandler->getName(), $userIdentifier), $stamps);
+            $this->operationBackgroundHandler->sendToBackground($attrObject, $operationData, $operationHandler->getName(), $userIdentifier);
             return new ApiOutput(
                 ['status' => 'Queued'],
                 Response::HTTP_ACCEPTED
