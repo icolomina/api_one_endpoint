@@ -330,3 +330,28 @@ As we can see above, we have to implement _Ict\ApiOneEndpoint\Contract\Operation
 With this, a notification would be sent to the client after a payment sending operation finishes.
 
 > If you want to use another way to sending notifications, you can create your own services and use it into your operations.
+
+### The controller
+
+Setting up your controller is a really easy task. Let's take a look
+
+```php
+use Ict\ApiOneEndpoint\Controller\ApiOeController;
+use Ict\ApiOneEndpoint\Operation\OperationHandler;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+
+#[Route('/api/backend/v1')]
+class BackendController extends ApiOeController
+{
+    #[Route('', name: 'api_backend_v1_process_operation', methods: ['POST'])]
+    public function processOperation(Request $request, SerializerInterface $serializer, OperationHandler $operationHandler): JsonResponse
+    {
+        return $this->executeOperation($request, $serializer, $operationHandler);
+    }
+}
+```
+
+You simply have to create your controller and extends it from _Ict\ApiOneEndpoint\Controller\ApiOeController_. The use the method _executeOperation_ passing to it $request, $serializer and $operationHandler as an arguments and your operation will be executed.
