@@ -48,7 +48,9 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-
+        <service id="Ict\ApiOneEndpoint\Message\OperationMessageHandler" class="Ict\ApiOneEndpoint\Message\OperationMessageHandler">
+            <tag name="messenger.message_handler"/>
+        </service>
 
     </services>
 </container>
