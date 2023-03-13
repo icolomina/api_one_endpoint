@@ -24,12 +24,15 @@ class IctApiOneEndpointExtension extends Extension
         $configs = $this->processConfiguration($configuration, $configs);
 
         $container->registerForAutoconfiguration(OperationInterface::class)->addTag('ict.api_one_endpoint.operation');
+        $container->setParameter('ict.api_one_endpoint.notification_handler_type', null);
 
         if(isset($configs['notifications']) && isset($configs['notifications']['type'])){
-            if(!interface_exists('Symfony\Component\Mercure\HubInterface')){
+            if($configs['notifications']['type'] === 'mercure' && !interface_exists('Symfony\Component\Mercure\HubInterface')){
                 throw new InvalidArgumentException('Symfony mercure must be installed in order to use mercure notifications. ' .
-                'Try "composer require mercure" to install it');
+                    'Try "composer require mercure" to install it');
             }
+
+            $container->setParameter('ict.api_one_endpoint.notification_handler_type', 'mercure');
         }
     }
 }

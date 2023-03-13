@@ -43,6 +43,12 @@
         <service id="Ict\ApiOneEndpoint\Notification\MercureNotificationHandler" class="Ict\ApiOneEndpoint\Notification\MercureNotificationHandler">
             <argument type="service" id="Symfony\Component\Mercure\HubInterface" />
         </service>
+
+        <service id="Ict\ApiOneEndpoint\Notification\NotificationManager" class="Ict\ApiOneEndpoint\Notification\NotificationManager">
+            <argument type="service" id="Ict\ApiOneEndpoint\Notification\NotificationCollection" />
+            <argument type="string" >%ict.api_one_endpoint.notification_handler_type%</argument>
+        </service>
+
         <!-- End notifications-->
 
         <service id="Ict\ApiOneEndpoint\Attribute\AttributeHelper" class="Ict\ApiOneEndpoint\Attribute\AttributeHelper">

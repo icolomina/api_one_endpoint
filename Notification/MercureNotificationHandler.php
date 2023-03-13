@@ -13,12 +13,12 @@ class MercureNotificationHandler implements NotificationHandlerInterface
         private readonly HubInterface $hub
     ){ }
 
-    public function pushNotification(string $topic, array $data): void
+    public function pushNotification(string $topic, string $data): void
     {
         $this->hub->publish(
             new Update(
                 $topic,
-                json_encode($data)
+                $data
             )
         );
     }

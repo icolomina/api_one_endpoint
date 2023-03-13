@@ -7,10 +7,10 @@ use Ict\ApiOneEndpoint\Contract\Operation\OperationNotificationInterface;
 use Ict\ApiOneEndpoint\Message\OperationMessage;
 use Ict\ApiOneEndpoint\Message\OperationMessageHandler;
 use Ict\ApiOneEndpoint\Model\Api\ApiOutput;
+use Ict\ApiOneEndpoint\Notification\NotificationManager;
 use Ict\ApiOneEndpoint\Operation\OperationCollection;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Mercure\HubInterface;
 
 class OperationMessageHandlerTest extends TestCase
 {
@@ -19,20 +19,22 @@ class OperationMessageHandlerTest extends TestCase
      */
     public function testOperationWithoutNotification()
     {
-        $hubStub = $this->createMock(HubInterface::class);
-        $hubStub->expects($this->never())->method('publish');
+        $notManagerStub = $this->createMock(NotificationManager::class);
+        $notManagerStub->expects($this->never())->method('notify');
 
-        $msgHandler = new OperationMessageHandler($this->getOperations(), $hubStub);
-        $msgHandler(new OperationMessage([], 'op2', '58744587'));
+        $msgHandler = new OperationMessageHandler($this->getOperations(), $notManagerStub);
+        $msgHandler(new OperationMessage('', 'op2', '58744587'));
     }
 
     public function testOperationWithNotification()
     {
-        $hubStub = $this->createMock(HubInterface::class);
-        $hubStub->expects($this->once())->method('publish');
 
-        $msgHandler = new OperationMessageHandler($this->getOperations(), $hubStub);
-        $msgHandler(new OperationMessage([], 'op1', '58744587'));
+        $notManagerStub = $this->createMock(NotificationManager::class);
+        $notManagerStub->expects($this->once())->method('notify');
+        $notManagerStub->expects($this->once())->method('getType')->willReturn('mercure');
+
+        $msgHandler = new OperationMessageHandler($this->getOperations(), $notManagerStub);
+        $msgHandler(new OperationMessage('', 'op1', '58744587'));
     }
 
     private function getOperations(): OperationCollection
