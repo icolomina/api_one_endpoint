@@ -3,7 +3,10 @@
 namespace Ict\ApiOneEndpoint\Operation;
 
 use Ict\ApiOneEndpoint\Attribute\AttributeHelper;
+use Ict\ApiOneEndpoint\Contract\Operation\RequiredUserInputInterface;
+use Ict\ApiOneEndpoint\Exception\OperationMissedUserException;
 use Ict\ApiOneEndpoint\Exception\OperationNotDefinedException;
+use Ict\ApiOneEndpoint\Exception\OperationValidationException;
 use Ict\ApiOneEndpoint\Message\OperationMessage;
 use Ict\ApiOneEndpoint\Model\Api\ApiInput;
 use Ict\ApiOneEndpoint\Model\Api\ApiOutput;
@@ -31,6 +34,13 @@ class OperationHandler
 
         if(!empty($operationHandler->getInput())){
             $operationData = $this->operationInputValidator->validateInput($apiInput, $operationHandler->getInput());
+            if($operationData instanceof RequiredUserInputInterface) {
+                if(!$this->security->getToken()){
+                    throw new OperationMissedUserException($apiInput->getOperation());
+                }
+
+                $operationData->setUser($this->security->getToken()->getUser());
+            }
         }
 
         $isGranted = $this->security->isGranted('EXECUTE_OPERATION', new OperationSubject(get_class($operationHandler), $operationHandler->getGroup()));

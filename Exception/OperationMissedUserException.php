@@ -2,11 +2,11 @@
 
 namespace Ict\ApiOneEndpoint\Exception;
 
-class OperationNotDefinedException extends \RuntimeException
+class OperationMissedUserException extends \RuntimeException
 {
     public function __construct(string $operation, int $code = 0, ?\Throwable $previous = null)
     {
-        $message = sprintf('Operation %s is not defined', $operation);
+        $message = sprintf('Operation %s required user but not authenticated user found', $operation);
         parent::__construct($message, $code, $previous);
     }
 }
