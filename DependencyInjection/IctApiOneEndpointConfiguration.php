@@ -11,20 +11,6 @@ class IctApiOneEndpointConfiguration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $tb = new TreeBuilder('ict_api_one_endpoint');
-        $tb
-            ->getRootNode()
-                ->children()
-                    ->arrayNode('notifications')
-                        ->canBeDisabled()
-                        ->children()
-                            ->enumNode('type')
-                                ->values(['mercure'])
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
-            ;
-
         return $tb;
     }
 }

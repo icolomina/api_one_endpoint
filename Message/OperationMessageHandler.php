@@ -2,10 +2,10 @@
 
 namespace Ict\ApiOneEndpoint\Message;
 
-use Ict\ApiOneEndpoint\Contract\Operation\OperationNotificationInterface;
-use Ict\ApiOneEndpoint\Notification\NotificationManager;
+use Ict\ApiOneEndpoint\EventSubscriber\Event\OperationPerformedEvent;
 use Ict\ApiOneEndpoint\Operation\OperationCollection;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 #[AsMessageHandler]
 class OperationMessageHandler
@@ -13,18 +13,14 @@ class OperationMessageHandler
 
     public function __construct(
         private readonly OperationCollection $operationCollection,
-        private readonly NotificationManager $notificationManager
+        private readonly EventDispatcherInterface $eventDispatcher
     ){ }
 
     public function __invoke(OperationMessage $message): void
     {
         $operationHandler = $this->operationCollection->getOperation($message->operation);
-        $operationHandler->perform($message->operationData);
+        $operationResult  = $operationHandler->perform($message->operationData);
 
-        if(!empty($this->notificationManager->getType()) && $operationHandler instanceof OperationNotificationInterface){
-            $topic = $operationHandler->getTopic($message->userIdentifier);
-            $this->notificationManager->notify($message->operationData, $topic);
-        }
-
+        $this->eventDispatcher->dispatch(new OperationPerformedEvent($operationHandler->getName(), $operationResult));
     }
 }

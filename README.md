@@ -284,52 +284,34 @@ class SendPaymentOperation implements OperationInterface
 
 It will delay the execution 300 seconds (5 minutes).
 
-### Sending notifications to the user
+### Events
 
-When an operation execution has been sent to the background, it can be useful to send an notification to the client to notify about the status of the operation. This bundle uses [symfony mercure bundle](https://symfony.com/doc/current/mercure.html) to send a notification to the client when an operation execution finishes.
-
-Again, let's go back to SendPayment operation
+After an operation is performed, this bundle dispatches an \Ict\ApiOneEndpoint\EventSubscriber\Event\OperationPerformedEvent so the developer can listen to it and execute some task, for instance sending a notification to the user
 
 ```php
-use Ict\ApiOneEndpoint\Contract\Operation\OperationInterface;
-use Ict\ApiOneEndpoint\Contract\Operation\OperationNotificationInterface;
-use Ict\ApiOneEndpoint\Model\Api\ApiOutput;
-use Ict\ApiOneEndpoint\Model\Attribute\IsBackground;
 
-#[IsBackground]
-class SendPaymentOperation implements OperationInterface, OperationNotificationInterface
-{
+class OperationSubscriber implements EventSubscriberInterface {
 
-    private array $notificationData = [];
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            OperationPerformedEvent::class => ['onOperationPerformed']    
+        ]
+
+    }
     
-    public function perform(mixed $operationData): ApiOutput
+    public function onOperationPerformed(OperationPerformedEvent $event): void
     {
-        // Perform operation ....
-        // Sending bizum, BTC ......
-        
-        $this->notificationData = []; // Push here all data we want to push back to the client
-        return new ApiOutput([], 200);
+         // events gives you access to operation name and operation result:
+         $opName   = $event->operation;
+         $opResult = $event->operationResult;
+         
+         // some stuff here .....
     }
-
-    public function getNotificationData(): string
-    {
-        return json_encode($this->notificationData);
-    }
-
-    public function getTopic(?string $userIdentifier = null): string
-    {
-        return 'https://mydomain.com/' . $userIdentifier . '/payments';
-    }
+}
 ```
 
-As we can see above, we have to implement _Ict\ApiOneEndpoint\Contract\Operation\OperationNotificationInterface_ in our operation to be able to send notification data to the client. This interface defines two methods:
-
-- **getNotificationData()**: Returns raw data which will be sent as notification payload (You have to use a format you can easily read on the client. Json format use to be the preferred one ).
-- **getTopic()**: Topic client will have to subscribe to in order to read notifications (See [mercure docs](https://mercure.rocks/spec#topic-selectors) to learn more about topics).
-
-With this, a notification would be sent to the client after a payment sending operation finishes.
-
-> If you want to use another way to sending notifications, you can create your own services and use it into your operations.
+If you are interested on sending notifications to the user, consider using this [symfony notifier](https://symfony.com/doc/current/notifier.html)
 
 ### The controller
 

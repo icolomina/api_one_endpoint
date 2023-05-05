@@ -4,6 +4,7 @@ namespace Ict\ApiOneEndpoint\Operation;
 
 use Ict\ApiOneEndpoint\Attribute\AttributeHelper;
 use Ict\ApiOneEndpoint\Contract\Operation\RequiredUserInputInterface;
+use Ict\ApiOneEndpoint\EventSubscriber\Event\OperationPerformedEvent;
 use Ict\ApiOneEndpoint\Exception\OperationMissedUserException;
 use Ict\ApiOneEndpoint\Exception\OperationNotDefinedException;
 use Ict\ApiOneEndpoint\Exception\OperationValidationException;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class OperationHandler
 {
@@ -24,6 +26,7 @@ class OperationHandler
         private readonly OperationBackgroundHandler $operationBackgroundHandler,
         private readonly AttributeHelper $attributeHelper,
         private readonly OperationInputValidator $operationInputValidator,
+        private readonly EventDispatcherInterface $eventDispatcher,
         private readonly mixed $security,
     ){ }
 
@@ -61,7 +64,10 @@ class OperationHandler
             );
         }
 
-        return $operationHandler->perform($operationData);
+        $operationResult = $operationHandler->perform($operationData);
+        $this->eventDispatcher->dispatch(new OperationPerformedEvent($operationHandler->getName(), $operationResult));
+
+        return $operationResult;
     }
 
 
