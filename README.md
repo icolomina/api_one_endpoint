@@ -318,7 +318,8 @@ If you are interested on sending notifications to the user, consider using this 
 Setting up your controller is a really easy task. Let's take a look
 
 ```php
-use Ict\ApiOneEndpoint\Controller\ApiOeController;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Ict\ApiOneEndpoint\Operation\OperationHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -326,8 +327,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api/backend/v1')]
-class BackendController extends ApiOeController
+class BackendController extends AbstractController
 {
+    use \Ict\ApiOneEndpoint\Controller\OperationControllerTrait;
+
     #[Route('', name: 'api_backend_v1_process_operation', methods: ['POST'])]
     public function processOperation(Request $request, SerializerInterface $serializer, OperationHandler $operationHandler): JsonResponse
     {
@@ -336,4 +339,4 @@ class BackendController extends ApiOeController
 }
 ```
 
-You simply have to create your controller and extends it from _Ict\ApiOneEndpoint\Controller\ApiOeController_. The use the method _executeOperation_ passing to it $request, $serializer and $operationHandler as an arguments and your operation will be executed.
+You simply have to create your controller and use trait _\Ict\ApiOneEndpoint\Controller\OperationControllerTrait_. Then use the method _executeOperation_ passing to it $request, $serializer and $operationHandler as an arguments and your operation will be executed.
