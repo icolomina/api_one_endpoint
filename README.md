@@ -84,6 +84,13 @@ Let's see the following examples:
 
 First example returns an array of Hero objects as an output and second example returns PaymentDoneOutput object.
 
+If you want to use [symfony serializer groups](https://symfony.com/doc/current/serializer.html#using-serialization-groups-attributes) in your outputs, you can use
+the third ApiOutput parameter to pass the group name
+
+```php
+return new ApiOutput($paymentOutput, 202, 'admin');
+```
+
 ### Defining input operations
 
 Operation inputs must be defined creating simple objects with its getters and setters. You can use [symfony validation constraints](https://symfony.com/doc/current/reference/constraints.html) to define validation rules so your input must hold required and valid data. This bundle 

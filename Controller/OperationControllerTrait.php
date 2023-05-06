@@ -6,6 +6,7 @@ use Ict\ApiOneEndpoint\Model\Api\ApiInput;
 use Ict\ApiOneEndpoint\Operation\OperationHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Context\Normalizer\ObjectNormalizerContextBuilder;
 use Symfony\Component\Serializer\SerializerInterface;
 
 trait OperationControllerTrait
@@ -14,9 +15,17 @@ trait OperationControllerTrait
     {
         $apiInput  = $serializer->deserialize($request->getContent(), ApiInput::class, 'json');
         $apiOutput = $operationHandler->performOperation($apiInput);
+        $context   = [];
+
+        if($apiOutput->getSerializerGroup()){
+            $context = (new ObjectNormalizerContextBuilder())
+                ->withGroups($apiOutput->getSerializerGroup())
+                ->toArray()
+            ;
+        }
 
         return new JsonResponse(
-            $serializer->normalize($apiOutput->getData()),
+            $serializer->normalize($apiOutput->getData(), null, $context),
             $apiOutput->getCode()
         );
     }
