@@ -333,7 +333,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
-#[Route('/api/backend/v1')]
+#[Route('/api/v1')]
 class BackendController extends AbstractController
 {
     use \Ict\ApiOneEndpoint\Controller\OperationControllerTrait;
