@@ -38,6 +38,7 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "10.1.x-dev"
+        "phpunit/phpunit": "10.1.x-dev",
+        "rregeer/phpunit-coverage-check": "dev-master"
     }
 }
