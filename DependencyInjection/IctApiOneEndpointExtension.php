@@ -5,7 +5,6 @@ namespace Ict\ApiOneEndpoint\DependencyInjection;
 use Ict\ApiOneEndpoint\Contract\Operation\OperationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
