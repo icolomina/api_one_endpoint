@@ -7,6 +7,11 @@ to extract what operation has to perform and what data needs to perform it.
 
 ### Installation
 
+Use composer to install this bundle:
+```shell
+composer require ict/api_one_endpoint:^1.0
+```
+
 ### Inputs and outputs
 
 Inputs and outputs define operations I/O flow. Each operatios can require an input (if it needs data to perform it) and must define an output which will be returned 
