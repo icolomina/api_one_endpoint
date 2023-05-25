@@ -1,3 +1,5 @@
+![example workflow](https://github.com/icolomina/api_one_endpoint/actions/workflows/ci.yml/badge.svg)
+
 # api_one_endpoint
 
 Api one endpoint bundle allows you to create an api focusing on operations instead of resources. One endpoint is used as a resource and api looks into payload 
