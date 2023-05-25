@@ -1,4 +1,4 @@
-![example workflow](https://github.com/icolomina/api_one_endpoint/actions/workflows/ci.yml/badge.svg)
+![ci status](https://github.com/icolomina/api_one_endpoint/actions/workflows/ci.yml/badge.svg)
 
 # api_one_endpoint
 
