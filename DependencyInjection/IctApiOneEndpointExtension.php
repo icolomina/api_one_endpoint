@@ -23,17 +23,5 @@ class IctApiOneEndpointExtension extends Extension
         $this->processConfiguration($configuration, $configs);
 
         $container->registerForAutoconfiguration(OperationInterface::class)->addTag('ict.api_one_endpoint.operation');
-
-        if(!$container->hasAlias('Symfony\Component\Serializer\SerializerInterface')) {
-            throw new \RuntimeException('This bundle requires Symfony serializer. Install it using "composer require symfony/serializer-pack" ');
-        }
-
-        if(!$container->hasAlias('Symfony\Component\Validator\Validator\ValidatorInterface')) {
-            throw new \RuntimeException('This bundle requires Symfony validator. Install it using "composer require symfony/validator" ');
-        }
-
-        if(!$container->hasAlias('Symfony\Component\Messenger\MessageBusInterface')) {
-            throw new \RuntimeException('This bundle requires Symfony messenger. Install it using "composer require symfony/messenger" ');
-        }
     }
 }
