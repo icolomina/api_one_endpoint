@@ -1,4 +1,10 @@
 {
+    "doctrine/annotations": {
+        "version": "2.0",
+        "recipe": {
+            "version": "1.10"
+        }
+    },
     "phpunit/phpunit": {
         "version": "10.1",
         "recipe": {
