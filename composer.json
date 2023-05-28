@@ -20,7 +20,6 @@
         "symfony/dotenv": "6.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "6.*",
-        "symfony/mercure-bundle": "^0.3.5",
         "symfony/messenger": "6.*",
         "symfony/property-access": "6.*",
         "symfony/property-info": "6.*",

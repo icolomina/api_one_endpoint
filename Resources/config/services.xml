@@ -11,11 +11,6 @@
             <argument type="tagged_iterator" tag="ict.api_one_endpoint.operation"/>
         </service>
 
-        <service id="Ict\ApiOneEndpoint\Notification\NotificationCollection" class="Ict\ApiOneEndpoint\Notification\NotificationCollection" public="false">
-            <argument type="tagged_iterator" tag="ict.api_one_endpoint.notification_handler"/>
-        </service>
-        <!-- End collections -->
-
         <service id="Ict\ApiOneEndpoint\Operation\OperationHandlerDiscover" class="Ict\ApiOneEndpoint\Operation\OperationHandlerDiscover" public="false">
             <argument type="service" id="Ict\ApiOneEndpoint\Operation\OperationCollection" />
         </service>
@@ -39,18 +34,6 @@
             <argument type="service" id="security.helper" />
         </service>
         <!-- End operations -->
-
-        <!-- Notifications -->
-        <service id="Ict\ApiOneEndpoint\Notification\MercureNotificationHandler" class="Ict\ApiOneEndpoint\Notification\MercureNotificationHandler">
-            <argument type="service" id="Symfony\Component\Mercure\HubInterface" />
-        </service>
-
-        <service id="Ict\ApiOneEndpoint\Notification\NotificationManager" class="Ict\ApiOneEndpoint\Notification\NotificationManager">
-            <argument type="service" id="Ict\ApiOneEndpoint\Notification\NotificationCollection" />
-            <argument type="string" >%ict.api_one_endpoint.notification_handler_type%</argument>
-        </service>
-
-        <!-- End notifications-->
 
         <service id="Ict\ApiOneEndpoint\Attribute\AttributeHelper" class="Ict\ApiOneEndpoint\Attribute\AttributeHelper">
         </service>
