@@ -298,6 +298,19 @@ class SendPaymentOperation implements OperationInterface
 
 It will delay the execution 300 seconds (5 minutes).
 
+Let's see how you should configure your messenger.yaml file to queue operations:
+
+```yaml
+messenger:
+  transports:
+      your_transport_name: "%env(MESSENGER_TRANSPORT_DSN)%"
+
+      routing:
+        'Ict\ApiOneEndpoint\Message\OperationMessage': your_transport_name
+```
+
+With the above configuration, you will be able to route operations to your transport.
+
 ### Events
 
 After an operation is performed, this bundle dispatches an \Ict\ApiOneEndpoint\EventSubscriber\Event\OperationPerformedEvent so the developer can listen to it and execute some task, for instance sending a notification to the user
