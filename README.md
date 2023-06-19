@@ -227,7 +227,7 @@ class AccountManagementVoter extends Voter
             return false;
         }
 
-        return $subject->getGroup() === 'ACCOUNT';
+        return $subject->group === 'ACCOUNT';
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -241,6 +241,13 @@ class AccountManagementVoter extends Voter
     }
 }
 ```
+The operation subject contains the following information (as public and readonly properties):
+
+- **operation**: Fully qualified operation class name
+- **operationName**: Operation Name (Value returned by method *getName*)
+- **group**: Operation group (Value returned by method *getGroup*)
+- **data**: Data to perform operation
+
 > This bundle always check operation authorization by it's possible there are no voters defined or no voters supporting conditions. To avoid getting denied access when no voters executed, set the following access decision strategy in your security.yaml file:
 
 ```yaml

@@ -46,7 +46,7 @@ class OperationHandler
             }
         }
 
-        $isGranted = $this->security->isGranted('EXECUTE_OPERATION', new OperationSubject(get_class($operationHandler), $operationHandler->getGroup(), $operationData));
+        $isGranted = $this->security->isGranted('EXECUTE_OPERATION', new OperationSubject(get_class($operationHandler), $operationHandler->getName(), $operationHandler->getGroup(), $operationData));
         if(!$isGranted) {
             throw new AccessDeniedException('Not allowed to perform this operation');
         }
