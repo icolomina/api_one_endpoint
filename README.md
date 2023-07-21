@@ -158,6 +158,11 @@ class SendPaymentOperation implements OperationInterface
     {
         return null;
     }
+    
+    public function getContext() : ?array
+    {
+        return null;
+    }
 }
 ```
 
@@ -167,6 +172,7 @@ Each operation must define the following methods (declared in OperationInterface
 - **getName**: Gets operation name
 - **getInput**: Gets input class. When an operation is executed, payload data will be deserialized to the input class and also validated. 
 - **getGroup**: Gets operation group. We will cover it when seeing operation authorization.
+- **getContext**: Gets the operation context. We will cover it when seeing operation context separation
 
 ### Protecting operations
 
@@ -347,6 +353,20 @@ class OperationSubscriber implements EventSubscriberInterface {
 
 If you are interested on sending notifications to the user, consider using this [symfony notifier](https://symfony.com/doc/current/notifier.html)
 
+### Operations contexts
+
+As we can see before, *OperationInterface* has a method *getContext* which can returns an array holding the allowed contexts or null. Let's imagine we want to keep two endpoints:
+one for clients and another one for providers. If we want an operation to allow only client context, we would write *getContext* method as follows:
+
+```php
+public function getContext(): ?array
+{
+    return ['client'];
+}
+```
+
+In the next section we will se how to set up an endpoint context.
+
 ### The controller
 
 Setting up your controller is a really easy task. Let's take a look
@@ -359,6 +379,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Ict\ApiOneEndpoint\Model\Api\Context;
 
 #[Route('/api/v1')]
 class BackendController extends AbstractController
@@ -368,9 +389,16 @@ class BackendController extends AbstractController
     #[Route('', name: 'api_backend_v1_process_operation', methods: ['POST'])]
     public function processOperation(Request $request, SerializerInterface $serializer, OperationHandler $operationHandler): JsonResponse
     {
-        return $this->executeOperation($request, $serializer, $operationHandler);
+        return $this->executeOperation($request, $serializer, $operationHandler, new Context());
     }
 }
 ```
 
 You simply have to create your controller and use trait _\Ict\ApiOneEndpoint\Controller\OperationControllerTrait_. Then use the method _executeOperation_ passing to it $request, $serializer and $operationHandler as an arguments and your operation will be executed.
+What about we want to limit our endpoint to manage only client context operations? We only would have to pass the context name to the *Context* object constructor
+
+```php
+return $this->executeOperation($request, $serializer, $operationHandler, new Context('client'));
+```
+
+Now, this controller would only execute client context operations.

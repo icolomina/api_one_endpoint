@@ -2,6 +2,8 @@
 
 namespace Ict\ApiOneEndpoint\EventSubscriber;
 
+use Ict\ApiOneEndpoint\Exception\ContextOperationNotMatchException;
+use Ict\ApiOneEndpoint\Exception\ContextOperationRequiredException;
 use Ict\ApiOneEndpoint\Exception\OperationValidationException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,6 +28,17 @@ class OperationValidationSubscriber implements EventSubscriberInterface
             $event->setResponse(new JsonResponse(
                 [
                     'errors' => $exception->getErrors()
+                ],
+                Response::HTTP_BAD_REQUEST
+            ));
+        }
+
+        if($exception instanceof ContextOperationRequiredException || $exception instanceof ContextOperationNotMatchException) {
+            $event->setResponse(new JsonResponse(
+                [
+                    'errors' => [
+                        'operation' => $exception->getMessage()
+                    ]
                 ],
                 Response::HTTP_BAD_REQUEST
             ));
