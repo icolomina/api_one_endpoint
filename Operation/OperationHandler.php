@@ -11,6 +11,7 @@ use Ict\ApiOneEndpoint\Exception\OperationValidationException;
 use Ict\ApiOneEndpoint\Message\OperationMessage;
 use Ict\ApiOneEndpoint\Model\Api\ApiInput;
 use Ict\ApiOneEndpoint\Model\Api\ApiOutput;
+use Ict\ApiOneEndpoint\Model\Api\Context;
 use Ict\ApiOneEndpoint\Model\Attribute\IsBackground;
 use Ict\ApiOneEndpoint\Model\Operation\OperationSubject;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,9 +31,9 @@ class OperationHandler
         private readonly mixed $security,
     ){ }
 
-    public function performOperation(ApiInput $apiInput): ApiOutput
+    public function performOperation(ApiInput $apiInput, Context $context): ApiOutput
     {
-        $operationHandler = $this->operationHandlerDiscover->discover($apiInput);
+        $operationHandler = $this->operationHandlerDiscover->discover($apiInput, $context);
         $operationData = null;
 
         if(!empty($operationHandler->getInput())){

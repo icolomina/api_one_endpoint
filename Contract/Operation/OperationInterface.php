@@ -11,4 +11,6 @@ interface OperationInterface
     public function getInput(): ?string;
 
     public function getGroup(): ?string;
+
+    public function getContext(): ?array;
 }
